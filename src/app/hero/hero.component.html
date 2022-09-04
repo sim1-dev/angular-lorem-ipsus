@@ -1,0 +1,11 @@
+<div class="hero-container">
+  <h1 class="title">LOREM IPSUS</h1>
+  <h4 class="subtitle">SUS TEXT GENERATOR</h4>
+  <ngb-carousel #carousel [pauseOnHover]="pauseOnHover" [pauseOnFocus]="pauseOnFocus" (slide)="onSlide($event)">
+    <ng-template ngbSlide *ngFor="let img of images; index as i">
+      <div class="slider-img-wrapper">
+        <img [src]="img" alt="Lorem Ipsus Amogus Image {{i + 1}}">
+      </div>
+    </ng-template>
+  </ngb-carousel>
+</div>
