@@ -7,4 +7,51 @@
 @import '~bootstrap/scss/bootstrap';
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body { margin: 0; font-family: "Comic Sans MS", "Comic Sans", cursive; font-weight:bold }
+::ng-deep *,
+::after,
+::before {
+  box-sizing: border-box !important;
+}
+
+*:focus {
+  outline: none;
+}
+
+.bg-primary {
+  background-color: red !important;
+}
+
+.text-primary {
+  color: red !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: red; 
+  border-radius:50px 50px 0 0;
+  box-shadow: 0 0 0 10px black;
+}
+
+::-webkit-scrollbar-thumb::after {
+  content: "";
+  display:block;
+  width: 24px;
+  height: 12px;
+  margin-left:-16px;
+  margin-top:6px;
+  background: white;
+  opacity: 1 !important;
+  border-radius: 50%;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #b30000; 
+}

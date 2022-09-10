@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { loremIpsum } from 'lorem-ipsum';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field/autosize';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { LoremIpsum } from 'lorem-ipsum';
 
 @Component({
   selector: 'app-generator',
@@ -8,53 +9,70 @@ import { loremIpsum } from 'lorem-ipsum';
 })
 export class GeneratorComponent implements OnInit {
 
+  @ViewChild("autosize") autosize: { resizeToFitContent: (arg0: boolean) => void; };
+
   generatedText: string = ''
+  lorem: LoremIpsum = new LoremIpsum({
+    sentencesPerParagraph: {
+      min: 4,
+      max: 4,
+    },
+    wordsPerSentence: {
+      max: 16,
+      min: 4
+    }
+  })
   vowels: string[] = ["a", "e", "i", "o", "u"]
   whitelist: string[] = ["lorem"]
-  susDictionary: string[] = ["morbius", "amorgus", "amogus", "sus", "Walter Whitus", "asus"]
+  susDictionary: string[] = ["morbius", "amorgus", "amogus", "sus", "Walter Whitus", "asus", "bus", "ravenous", "chungus", "discuss", "emus", "fungus", "genius", "hippopotamus", "cactus", "lexus", "mangus", "ogus", "pegasus", "rhombus", "usus", "wigasus", "Zeus", "magus", "ogamus", "Obamasus", "excursus", "colossus", "versus", "lapsus", "tarsus", "abomasus", "zamasus", "hypothalamus", "sarcophagus", "tremendous", "prospectus", "voluptuous", "homunculus", "abdicatus", "acerrimus", "aegyptius", "ferrarius", "generatus", "genericus", "iaculatus", "oratorius", "percussus", "spartacus", "bingus"]
+  numberOfParagraphs: number = 4
+  susLevel: number = 1
 
   constructor() { }
 
   ngOnInit(): void {
-    console.log(this.generateText())
+    this.lorem.generator.words = this.lorem.generator.words.concat(this.susDictionary)
+    //console.log(this.lorem)
+    this.generateText()
   }
 
   generateText(): string {
-    let text: string, words: string[], endsWithDot: boolean = false
-    text = loremIpsum({
-      count: 1,                // Number of "words", "sentences", or "paragraphs"
-      format: "plain",         // "plain" or "html"
-      paragraphLowerBound: 3,  // Min. number of sentences per paragraph.
-      paragraphUpperBound: 7,  // Max. number of sentences per paragarph.
-      random: Math.random,     // A PRNG function
-      sentenceLowerBound: 5,   // Min. number of words per sentence.
-      sentenceUpperBound: 15,  // Max. number of words per sentence.
-      suffix: "\n",            // Line ending, defaults to "\n" or "\r\n" (win32)
-      units: "paragraphs",     // paragraph(s), "sentence(s)", or "word(s)"
-    })
+    let text: string, words: string[], endsWithDot: boolean = false, finalWhitelist: string[], originalWordlist: string[], susLeveledWordlist: string[]
+    originalWordlist = this.lorem.generator.words
+    susLeveledWordlist = originalWordlist
+    finalWhitelist = this.whitelist.concat(this.susDictionary).map(word => word.toLowerCase())
+    for(let i = 1; i < this.susLevel; i++) {
+      susLeveledWordlist = susLeveledWordlist.concat(this.susDictionary)
+    }
+    this.lorem.generator.words = susLeveledWordlist
+    text = this.lorem.generateParagraphs(this.numberOfParagraphs)
     words = text.split(" ")
     words.forEach((word, i) => {
-
       //not in whitelist
-      if(!this.whitelist.some(whitelistedWords => word.toLowerCase().endsWith(whitelistedWords))) {
+      if(!finalWhitelist.some(whitelistedWord => word.toLowerCase() === whitelistedWord.toLowerCase()) && word.toLowerCase() !== "walter" && word.toLowerCase() !== "whitus") {
 
         //temporarly remove dot
-        if(word.toLowerCase().endsWith(".")) {
+        if(words[i].toLowerCase().endsWith(".")) {
           endsWithDot = true
           words[i] = word.replace(".", "")
         }
 
         //avoid double words
-        if(word.toLowerCase() === words[i - 1]?.toLowerCase())
-          words[i - 1] = this.susDictionary[Math.floor(Math.random()*this.susDictionary.length)]
+        if(words[i].toLowerCase() === words[i - 1]?.toLowerCase()) {
+          // console.log(words[i - 1], "duplicate word of "+word)
+          // console.log("to be replaced with: "+this.susDictionary[Math.floor(Math.random()*this.susDictionary.length)])
+          words[i] = this.susDictionary[Math.floor(Math.random()*this.susDictionary.length)]
+        }
 
         //logic
-        if(this.vowels.some(letters => word.toLowerCase().endsWith(letters))) {
-          words[i] += "s"
-        } else if(word.endsWith("m")) {
-          words[i] = word.replace("m", "s")
-        } else {
-          words[i] += "us"
+        if(!finalWhitelist.includes(words[i].toLowerCase().replace(/\./g, ''))) {
+          if(this.vowels.some(letters => words[i].toLowerCase().endsWith(letters.toLowerCase())) ) {
+            words[i] += "s"
+          } else if(words[i].endsWith("m")) {
+            words[i] = words[i].replace("m", "s")
+          } else {
+            words[i] += "us"
+          }
         }
 
         //restore dot
@@ -67,7 +85,7 @@ export class GeneratorComponent implements OnInit {
     })
     text = words.join(" ")
     this.generatedText = text
-    console.log(this.generatedText)
+    this.lorem.generator.words = originalWordlist
     return this.generatedText
   }
 
