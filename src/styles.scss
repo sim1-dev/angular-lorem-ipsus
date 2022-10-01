@@ -18,6 +18,10 @@ body { margin: 0; font-family: "Comic Sans MS", "Comic Sans", cursive; font-weig
   outline: none;
 }
 
+textarea {
+  box-sizing:border-box !important;
+}
+
 .bg-primary {
   background-color: red !important;
 }

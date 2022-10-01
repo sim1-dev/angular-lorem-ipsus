@@ -14,9 +14,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSliderModule } from '@angular/material/slider'; 
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClipboardModule } from '@angular/cdk/clipboard';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { FooterComponent } from './footer/footer.component';
 import { HeaderComponent } from './header/header.component';
+import { ToasterService } from './services/toaster.service';
 
 @NgModule({
   declarations: [
@@ -39,6 +42,8 @@ import { HeaderComponent } from './header/header.component';
     MatIconModule,
     MatSliderModule,
     MatTooltipModule,
+    ClipboardModule,
+    MatSnackBarModule
   ],
   exports: [
     FormsModule,
@@ -50,8 +55,10 @@ import { HeaderComponent } from './header/header.component';
     MatIconModule,
     MatSliderModule,
     MatTooltipModule,
+    ClipboardModule,
+    MatSnackBarModule
   ],
-  providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}],
+  providers: [{provide: MAT_FORM_FIELD_DEFAULT_OPTIONS, useValue: {appearance: 'outline'}}, ToasterService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

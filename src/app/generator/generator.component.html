@@ -23,13 +23,14 @@
     </div>
 
   </div>
-
-    <mat-button-toggle-group class="actions">
+  <div class="actions">
+    <mat-button-toggle-group>
       <mat-button-toggle class="primary" (click)="generateText()">GENERATE <mat-icon>autorenew</mat-icon></mat-button-toggle>
-      <mat-button-toggle [disabled]="generatedText == ''">COPY TEXT <mat-icon>content_copy</mat-icon></mat-button-toggle>
+      <mat-button-toggle [disabled]="generatedText == ''" [cdkCopyToClipboard]="generatedText" (click)="toasterService.displayMessage('Text copied to clipboard')">COPY TEXT <mat-icon>content_copy</mat-icon></mat-button-toggle>
     </mat-button-toggle-group>
+  </div>
 
-  <mat-form-field appearance="fill" class="example-full-width w-100">
+  <mat-form-field class="generatorarea" appearance="fill" class="example-full-width w-100">
     <textarea matInput placeholder="Generated text..." disabled>{{generatedText}}</textarea>
   </mat-form-field>
 </section>
