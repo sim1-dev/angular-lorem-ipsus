@@ -1,7 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @font-face {
     font-family: Amogus;
-    src: url("/assets/fonts/AmongUs-Regular.ttf") format("truetype");
+    src:  url("/assets/fonts/AmongUs-Regular.ttf") format("truetype"),
+          url('/assets/fonts/AmongUs-Regular.woff') format('woff'),
+          url('/assets/fonts/AmongUs-Regular.woff2') format('woff2')
 }
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
@@ -16,6 +18,10 @@ body { margin: 0; font-family: "Comic Sans MS", "Comic Sans", cursive; font-weig
 
 *:focus {
   outline: none;
+}
+
+textarea {
+  box-sizing:border-box !important;
 }
 
 .bg-primary {

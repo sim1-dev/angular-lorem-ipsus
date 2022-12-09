@@ -1,6 +1,7 @@
 import { CdkTextareaAutosize } from '@angular/cdk/text-field/autosize';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LoremIpsum } from 'lorem-ipsum';
+import { ToasterService } from '../services/toaster.service';
 
 @Component({
   selector: 'app-generator',
@@ -24,11 +25,12 @@ export class GeneratorComponent implements OnInit {
   })
   vowels: string[] = ["a", "e", "i", "o", "u"]
   whitelist: string[] = ["lorem"]
-  susDictionary: string[] = ["morbius", "amorgus", "amogus", "sus", "Walter Whitus", "asus", "bus", "ravenous", "chungus", "discuss", "emus", "fungus", "genius", "hippopotamus", "cactus", "lexus", "mangus", "ogus", "pegasus", "rhombus", "usus", "wigasus", "Zeus", "magus", "ogamus", "Obamasus", "excursus", "colossus", "versus", "lapsus", "tarsus", "abomasus", "zamasus", "hypothalamus", "sarcophagus", "tremendous", "prospectus", "voluptuous", "homunculus", "abdicatus", "acerrimus", "aegyptius", "ferrarius", "generatus", "genericus", "iaculatus", "oratorius", "percussus", "spartacus", "bingus"]
+  susDictionary: string[] = ["morbius", "amorgus", "amogus", "sus", "Walter Whitus", "asus", "bus", "chungus", "wigasus", "Zeus", "ogamus", "Obamasus", "abomasus", "zamasus", "sarcophagus", "bingus", "tiramisus", "Jesus", "cactus"]
+  extraDictionary: string[] = ["ravenous", "discuss", "emus", "fungus", "genius", "hippopotamus", "lexus", "mangus", "ogus", "pegasus", "rhombus", "usus", "magus", "excursus", "colossus", "versus", "lapsus", "tarsus", "hypothalamus", "tremendous", "prospectus", "voluptuous", "homunculus", "abdicatus", "acerrimus", "aegyptius", "ferrarius", "generatus", "genericus", "iaculatus", "oratorius", "percussus", "spartacus", "consensus", "colossus", "discursus", "excursus", "lapsus", "Crassus", "casus"]
   numberOfParagraphs: number = 4
   susLevel: number = 1
 
-  constructor() { }
+  constructor(public toasterService: ToasterService) { }
 
   ngOnInit(): void {
     this.lorem.generator.words = this.lorem.generator.words.concat(this.susDictionary)
@@ -38,9 +40,9 @@ export class GeneratorComponent implements OnInit {
 
   generateText(): string {
     let text: string, words: string[], endsWithDot: boolean = false, finalWhitelist: string[], originalWordlist: string[], susLeveledWordlist: string[]
-    originalWordlist = this.lorem.generator.words
+    originalWordlist = this.lorem.generator.words.concat(this.extraDictionary)
     susLeveledWordlist = originalWordlist
-    finalWhitelist = this.whitelist.concat(this.susDictionary).map(word => word.toLowerCase())
+    finalWhitelist = this.whitelist.concat(this.susDictionary).concat(this.extraDictionary).map(word => word.toLowerCase())
     for(let i = 1; i < this.susLevel; i++) {
       susLeveledWordlist = susLeveledWordlist.concat(this.susDictionary)
     }
@@ -48,24 +50,25 @@ export class GeneratorComponent implements OnInit {
     text = this.lorem.generateParagraphs(this.numberOfParagraphs)
     words = text.split(" ")
     words.forEach((word, i) => {
+      
       //not in whitelist
-      if(!finalWhitelist.some(whitelistedWord => word.toLowerCase() === whitelistedWord.toLowerCase()) && word.toLowerCase() !== "walter" && word.toLowerCase() !== "whitus") {
+      if(!finalWhitelist.some(whitelistedWord => word.toLowerCase() === whitelistedWord.toLowerCase()) && word.toLowerCase() !== "walter" && word.toLowerCase() !== "whitus") { 
 
         //temporarly remove dot
         if(words[i].toLowerCase().endsWith(".")) {
           endsWithDot = true
           words[i] = word.replace(".", "")
         }
+        
+        console.log(words[i].toLowerCase(), words[i-1]?.toLowerCase())
 
         //avoid double words
-        if(words[i].toLowerCase() === words[i - 1]?.toLowerCase()) {
-          // console.log(words[i - 1], "duplicate word of "+word)
-          // console.log("to be replaced with: "+this.susDictionary[Math.floor(Math.random()*this.susDictionary.length)])
+        if(words[i - 1]?.toLowerCase().includes(words[i].toLowerCase())) {
           words[i] = this.susDictionary[Math.floor(Math.random()*this.susDictionary.length)]
         }
 
         //logic
-        if(!finalWhitelist.includes(words[i].toLowerCase().replace(/\./g, ''))) {
+        if(!finalWhitelist.map(whitelistedWord => whitelistedWord.toLowerCase()).includes(words[i].toLowerCase().replace(/\./g, ''))) {
           if(this.vowels.some(letters => words[i].toLowerCase().endsWith(letters.toLowerCase())) ) {
             words[i] += "s"
           } else if(words[i].endsWith("m")) {
