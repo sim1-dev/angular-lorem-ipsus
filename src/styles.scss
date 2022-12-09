@@ -5,11 +5,16 @@
           url('/assets/fonts/AmongUs-Regular.woff') format('woff'),
           url('/assets/fonts/AmongUs-Regular.woff2') format('woff2')
 }
+@font-face {
+  font-family: Comici;
+  src:  url("/assets/fonts/comici.ttf") format("truetype")
+}
+
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
 
 html, body { height: 100%; }
-body { margin: 0; font-family: "Comic Sans MS", "Comic Sans", cursive; font-weight:bold }
+body { margin: 0; font-family: Comici, "Comic Sans", cursive; font-weight:bold }
 ::ng-deep *,
 ::after,
 ::before {

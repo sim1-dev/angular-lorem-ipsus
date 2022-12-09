@@ -6,6 +6,11 @@ textarea {
     background-color: red !important;
 }
 
+.content-wrapper {
+    max-width:80% !important;
+    margin: 0 auto !important;
+}
+
 .title {
     font-family: Amogus;
     font-size:50px;
@@ -46,6 +51,7 @@ textarea {
     }
     .mat-form-field-appearance-fill .mat-form-field-flex {
         border: 0 !important;
+        padding: 10px 0 !important;
         //padding-top: 0 !important
     }
     .mat-button-toggle-appearance-standard.primary {
